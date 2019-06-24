@@ -1,17 +1,17 @@
-//index.js
-require("dotenv-safe").load();
+require('dotenv-safe').config({
+  allowEmptyValues: true
+});
 var jwt = require('jsonwebtoken');
 
 var http = require('http');
 const express = require('express')
-const httpProxy = require('express-http-proxy')
+//const httpProxy = require('express-http-proxy')
 const app = express()
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const helmet = require('helmet');
 
-const userServiceProxy = httpProxy('http://localhost:3001');
-const productsServiceProxy = httpProxy('http://localhost:3002');
+const mysql = require('mysql');
 
 app.use(logger('dev'));
 app.use(helmet());
@@ -19,21 +19,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get('/users', verifyJWT, (req, res, next) => {
-  userServiceProxy(req, res, next);
+app.get('/', (req, res, next) => {
+  console.log('Api funcionando...');
 })
-
-app.get('/products', verifyJWT, (req, res, next) => {
-  productsServiceProxy(req, res, next);
-})
-
-app.get('/logout', function(req, res) {
-  res.status(200).send({ auth: false, token: null });
-});
 
 //authentication
 app.post('/login', (req, res, next) => {
-    if(req.body.user === 'luiz' && req.body.pwd === '123'){
+
+    if (req.body.pwd === process.env.COFF_SECRET){
       
         //auth ok
         const id = 1; //esse id viria do banco de dados
@@ -63,6 +56,49 @@ function verifyJWT(req, res, next){
     }
   }
 
+  
+function execSQLQuery(sqlQry, res){
+  const connection = mysql.createConnection({
+    host     : process.env.BDHOST,
+    port     : process.env.BDPORT,
+    user     : process.env.BDUSER,
+    password : process.env.BDPWD,
+    database : process.env.BDNAME
+  });
+
+  connection.query(sqlQry, function(error, results, fields){
+      if(error) 
+        res.json(error);
+      else
+        res.json(results);
+      connection.end();
+  });
+}
+
+app.get('/atendimento', verifyJWT, (req, res, next) => {
+  execSQLQuery('SELECT id FROM pendencias', res);
+})
+
+app.get('/clientes', verifyJWT, (req, res, next) => {
+  execSQLQuery('SELECT id FROM clientes', res);
+})
+
+app.get('/ligacoes', verifyJWT, (req, res, next) => {
+  execSQLQuery('SELECT id FROM rcp', res);
+})
+
+app.get('/visitas', verifyJWT, (req, res, next) => {
+  execSQLQuery('SELECT id FROM agenda', res);
+})
+
+// app.get('/roteiros/:id?', verifyJWT, (req, res) =>{
+//   let filter = '';
+//   if(req.params.id) filter = ' WHERE ID=' + parseInt(req.params.id);
+//   execSQLQuery('SELECT ' + campos + ' FROM roteiros' + filter, res);
+// })
+
 // Proxy request
 var server = http.createServer(app);
-server.listen(3000);
+var port = process.env.PORT || 3000;
+//console.log('API funcionando...')
+server.listen(port);
