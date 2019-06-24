@@ -76,25 +76,25 @@ function execSQLQuery(sqlQry, res){
 }
 
 app.get('/atendimento', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM pendencias', res);
+  execSQLQuery('SELECT * FROM pendencias where year(datasolic)>=2019', res);
 })
 
 app.get('/clientes', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM clientes', res);
+  execSQLQuery('SELECT * FROM clientes', res);
 })
 
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM rcp', res);
+  execSQLQuery('SELECT * FROM rcp where year(data)>=2019', res);
 })
 
 app.get('/visitas', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM agenda', res);
+  execSQLQuery('SELECT * FROM agenda where year(data)>=2019', res);
 })
 
-// app.get('/roteiros/:id?', verifyJWT, (req, res) =>{
+// app.get('/atendimento/:id?', verifyJWT, (req, res) =>{
 //   let filter = '';
 //   if(req.params.id) filter = ' WHERE ID=' + parseInt(req.params.id);
-//   execSQLQuery('SELECT ' + campos + ' FROM roteiros' + filter, res);
+//   execSQLQuery('SELECT ' + campos + ' FROM pendencias' + filter, res);
 // })
 
 // Proxy request
