@@ -85,6 +85,7 @@ app.get('/clientes', verifyJWT, (req, res, next) => {
 
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
   let today = new Date(today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0'));
+  console.log(today);
   execSQLQuery("SELECT * FROM rcp where data='" + today + "'", res);
 })
 
