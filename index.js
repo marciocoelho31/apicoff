@@ -76,19 +76,21 @@ function execSQLQuery(sqlQry, res){
 }
 
 app.get('/atendimento', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT * FROM pendencias where year(datasolic)>=2019', res);
+  execSQLQuery("SELECT * FROM pendencias where not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL' order by prior", res);
 })
 
 app.get('/clientes', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT * FROM clientes', res);
+  execSQLQuery("SELECT * FROM clientes where autorizado='SIM'", res);
 })
 
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT * FROM rcp where year(data)>=2019', res);
+  let today = new Date(today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0'));
+  execSQLQuery("SELECT * FROM rcp where data='" + today + "'", res);
 })
 
 app.get('/visitas', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT * FROM agenda where year(data)>=2019', res);
+  let today = new Date(today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0'));
+  execSQLQuery("SELECT * FROM agenda where data='" + today + "'", res);
 })
 
 // app.get('/atendimento/:id?', verifyJWT, (req, res) =>{
