@@ -76,29 +76,29 @@ function execSQLQuery(sqlQry, res){
 }
 
 app.get('/atendimento', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM pendencias', res);
+  execSQLQuery("SELECT * FROM pendencias where not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL' order by prior", res);
 })
 
 app.get('/clientes', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM clientes', res);
-})
-
-app.get('/clientesnome', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT nome FROM clientes order by nome', res);
+  execSQLQuery("SELECT * FROM clientes where autorizado='SIM'", res);
 })
 
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM rcp', res);
+  let today = new Date();
+  let date = today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0');
+  execSQLQuery("SELECT * FROM rcp where data='" + date + "'", res);
 })
 
 app.get('/visitas', verifyJWT, (req, res, next) => {
-  execSQLQuery('SELECT id FROM agenda', res);
+  let today = new Date();
+  let date = today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0');
+  execSQLQuery("SELECT * FROM agenda where data='" + date + "'", res);
 })
 
-// app.get('/roteiros/:id?', verifyJWT, (req, res) =>{
+// app.get('/atendimento/:id?', verifyJWT, (req, res) =>{
 //   let filter = '';
 //   if(req.params.id) filter = ' WHERE ID=' + parseInt(req.params.id);
-//   execSQLQuery('SELECT ' + campos + ' FROM roteiros' + filter, res);
+//   execSQLQuery('SELECT ' + campos + ' FROM pendencias' + filter, res);
 // })
 
 // Proxy request
