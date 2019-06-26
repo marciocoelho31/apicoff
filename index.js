@@ -83,6 +83,10 @@ app.get('/clientes', verifyJWT, (req, res, next) => {
   execSQLQuery('SELECT * FROM clientes', res);
 })
 
+app.get('/clientesnome', verifyJWT, (req, res, next) => {
+  execSQLQuery('SELECT nome FROM clientes order by nome', res);
+})
+
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
   execSQLQuery('SELECT * FROM rcp where year(data)>=2019', res);
 })
