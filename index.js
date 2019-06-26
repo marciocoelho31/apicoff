@@ -83,6 +83,10 @@ app.get('/clientes', verifyJWT, (req, res, next) => {
   execSQLQuery('SELECT id FROM clientes', res);
 })
 
+app.get('/clientesnome', verifyJWT, (req, res, next) => {
+  execSQLQuery('SELECT nome FROM clientes order by nome', res);
+})
+
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
   execSQLQuery('SELECT id FROM rcp', res);
 })
