@@ -95,6 +95,10 @@ app.get('/clientesnome', verifyJWT, (req, res, next) => {
   execSQLQuery("SELECT nome FROM clientes order by nome", res);
 })
 
+app.get('/clientesnome', verifyJWT, (req, res, next) => {
+  execSQLQuery("SELECT nome FROM clientes order by nome", res);
+})
+
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
   let today = new Date();
   let date = today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0');
