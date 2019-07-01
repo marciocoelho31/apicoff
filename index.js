@@ -87,17 +87,23 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
   }
   if (opitem == "1") {
     pesquisa += " and posicao='DISPONÍVEL'";
+    pesquisa += " order by datapos desc"
   }
   else if (opitem == "2") {
     pesquisa += " and not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL'";
+    pesquisa += " order by prior"
   }
   else if (opitem == "3") {
     pesquisa += " and not isnull(prior) and prior>0 and posicao='EM ANÁLISE'";
+    pesquisa += " order by datapos desc"
   }
   else if (opitem == "4") {
     pesquisa += " and not isnull(prior) and prior>0 and posicao='EM PRODUÇÃO'";
+    pesquisa += " order by datapos desc"
   }
-  pesquisa += " order by prior, datapos desc"
+  else {
+    pesquisa += " order by datapos desc"
+  }
   console.log(data1, data2);
 
   execSQLQuery(pesquisa, res);
