@@ -78,8 +78,8 @@ function execSQLQuery(sqlQry, res){
 app.get('/atendimento', verifyJWT, (req, res, next) => {
 
   let cliente = req.headers['sel-atend-cli'];
-  let data1 = req.headers['sel-atend-dt1'];
-  let data2 = req.headers['sel-atend-dt2'];
+  let data1 = req.headers['sel-atend-dt1'] || new Date();
+  let data2 = req.headers['sel-atend-dt2'] || new Date();
   let opitem = req.headers['sel-atend-opitem'];
   let pesquisa = "SELECT * FROM pendencias where not isnull(cliente)";
   if (cliente != "") {
@@ -104,7 +104,7 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
   else {
     pesquisa += " order by datapos desc"
   }
-  console.log(data1, data2);
+  console.log('DATA1', data1,' - DATA2', data2);
 
   execSQLQuery(pesquisa, res);
 })
