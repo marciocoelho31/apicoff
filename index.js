@@ -78,10 +78,27 @@ function execSQLQuery(sqlQry, res){
 app.get('/atendimento', verifyJWT, (req, res, next) => {
 
   let cliente = req.headers['sel-atend-cli'];
-  let pesquisa = "SELECT * FROM pendencias where not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL' order by prior";
+  let data1 = req.headers['sel-atend-dt1'];
+  let data2 = req.headers['sel-atend-dt2'];
+  let opitem = req.headers['sel-atend-opitem'];
+  let pesquisa = "SELECT * FROM pendencias where not isnull(cliente)";
   if (cliente != "") {
-    pesquisa = "SELECT * FROM pendencias where cliente='" + cliente + "' order by datapos desc";
+    pesquisa += " and cliente='" + cliente + "'";
   }
+  if (opitem == "1") {
+    pesquisa += " and posicao='DISPONÍVEL'";
+  }
+  else if (opitem == "2") {
+    pesquisa += " and not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL'";
+  }
+  else if (opitem == "3") {
+    pesquisa += " and not isnull(prior) and prior>0 and posicao='EM ANÁLISE'";
+  }
+  else if (opitem == "4") {
+    pesquisa += " and not isnull(prior) and prior>0 and posicao='EM PRODUÇÃO'";
+  }
+  pesquisa += " order by prior, datapos desc"
+  console.log(data1, data2);
 
   execSQLQuery(pesquisa, res);
 })
