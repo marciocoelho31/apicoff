@@ -76,11 +76,23 @@ function execSQLQuery(sqlQry, res){
 }
 
 app.get('/atendimento', verifyJWT, (req, res, next) => {
-  execSQLQuery("SELECT * FROM pendencias where not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL' order by prior", res);
+
+  let cliente = req.headers['sel-atend-cli'];
+  let pesquisa = "SELECT * FROM pendencias where not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL' order by prior";
+  if (cliente != "") {
+    pesquisa = "SELECT * FROM pendencias where cliente='" + cliente + "' order by datapos desc";
+  }
+
+  execSQLQuery(pesquisa, res);
 })
 
 app.get('/clientes', verifyJWT, (req, res, next) => {
-  execSQLQuery("SELECT * FROM clientes where autorizado='SIM'", res);
+  let pesquisa = "SELECT * FROM clientes where autorizado='SIM'";
+  execSQLQuery(pesquisa, res);
+})
+
+app.get('/clientesnome', verifyJWT, (req, res, next) => {
+  execSQLQuery("SELECT nome FROM clientes order by nome", res);
 })
 
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
