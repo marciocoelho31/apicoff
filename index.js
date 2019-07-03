@@ -5,7 +5,6 @@ var jwt = require('jsonwebtoken');
 
 var http = require('http');
 const express = require('express')
-//const httpProxy = require('express-http-proxy')
 const app = express()
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -23,12 +22,9 @@ app.get('/', (req, res, next) => {
   console.log('Api funcionando...');
 })
 
-//authentication
 app.post('/login', (req, res, next) => {
 
     if (req.body.pwd === process.env.COFF_SECRET){
-      
-        //auth ok
         const id = 1; //esse id viria do banco de dados
         var token = jwt.sign({ id }, process.env.SECRET, {
         expiresIn: 300 // expires in 5min
@@ -90,7 +86,6 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
     ddata2 = new Date();
     data2 = ddata2.getFullYear() + "-" + parseInt(ddata2.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata2.getDate().toString().padStart(2, "0");
   }
-  //console.log(data1, data2);
 
   let pesquisa = "SELECT * FROM pendencias where not isnull(cliente)";
   if (cliente != "") {
@@ -112,14 +107,14 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
     if (data1 != '' && data2 != '') {
       pesquisa += " and not isnull(datasolic) and datasolic>='" + data1.substr(0, 10) + "' and datasolic<='" + data2.substr(0, 10) + "'";
     }
-    pesquisa += " order by datapos desc";
+    pesquisa += " order by prior";
   }
   else if (opitem == "4") {
     pesquisa += " and not isnull(prior) and prior>0 and posicao='EM PRODUÇÃO'";
     if (data1 != '' && data2 != '') {
       pesquisa += " and not isnull(datasolic) and datasolic>='" + data1.substr(0, 10) + "' and datasolic<='" + data2.substr(0, 10) + "'";
     }
-    pesquisa += " order by datapos desc";
+    pesquisa += " order by prior";
   }
   else {
     if (data1 != '' && data2 != '') {
@@ -165,5 +160,4 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
 // Proxy request
 var server = http.createServer(app);
 var port = process.env.PORT || 3000;
-//console.log('API funcionando...')
 server.listen(port);
