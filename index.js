@@ -127,7 +127,8 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
 })
 
 app.get('/clientes', verifyJWT, (req, res, next) => {
-  let pesquisa = "SELECT * FROM clientes where autorizado='SIM'";
+  let pesquisa = "SELECT * FROM clientes where not isnull(nome) order by nome";
+  // montar pesquisa...
   execSQLQuery(pesquisa, res);
 })
 
