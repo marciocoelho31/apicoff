@@ -136,9 +136,6 @@ app.get('/clientesnome', verifyJWT, (req, res, next) => {
 })
 
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
-  let today = new Date();
-  let date = today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0');
-
   let cliente = req.headers['sel-lig-cli'];
   let data1 = req.headers['sel-lig-dt1'] || '';
   let data2 = req.headers['sel-lig-dt2'] || '';
@@ -171,9 +168,35 @@ app.get('/ligacoes', verifyJWT, (req, res, next) => {
 })
 
 app.get('/visitas', verifyJWT, (req, res, next) => {
-  let today = new Date();
-  let date = today.getFullYear() + "-" + parseInt(today.getMonth() + 1).toString().padStart(2, '0') + "-" + today.getDate().toString().padStart(2, '0');
-  execSQLQuery("SELECT * FROM agenda where data='" + date + "'", res);
+  let cliente = req.headers['sel-vis-cli'];
+  let data1 = req.headers['sel-vis-dt1'] || '';
+  let data2 = req.headers['sel-vis-dt2'] || '';
+
+  if (data1 == '' && data2 != '') {
+    ddata1 = new Date();
+    data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
+  }
+  else if (data2 == '' && data1 != '') {
+    ddata2 = new Date();
+    data2 = ddata2.getFullYear() + "-" + parseInt(ddata2.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata2.getDate().toString().padStart(2, "0");
+  }
+  else if (data1 == '' && data2 == '') {
+    ddata1 = new Date();
+    data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
+    ddata2 = new Date();
+    data2 = ddata2.getFullYear() + "-" + parseInt(ddata2.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata2.getDate().toString().padStart(2, "0");
+  }
+
+  let pesquisa = "SELECT * FROM agenda where not isnull(local)";
+  if (cliente != "") {
+    pesquisa += " and local='" + cliente + "'";
+  }
+  if (data1 != '' && data2 != '') {
+    pesquisa += " and not isnull(data) and data>='" + data1.substr(0, 10) + "' and data<='" + data2.substr(0, 10) + "'";
+  }
+  pesquisa += " order by data desc";
+
+  execSQLQuery(pesquisa, res);
 })
 
 // app.get('/atendimento/:id?', verifyJWT, (req, res) =>{
