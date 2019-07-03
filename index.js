@@ -136,6 +136,18 @@ app.get('/clientesnome', verifyJWT, (req, res, next) => {
   execSQLQuery("SELECT nome FROM clientes order by nome", res);
 })
 
+app.get('/clientes/sistemas', verifyJWT, (req, res, next) => {
+  execSQLQuery("SELECT distinct sistema FROM clientes order by sistema", res);
+})
+
+app.get('/clientes/cidades', verifyJWT, (req, res, next) => {
+  execSQLQuery("SELECT distinct cidade FROM clientes order by cidade", res);
+})
+
+app.get('/clientes/estados', verifyJWT, (req, res, next) => {
+  execSQLQuery("SELECT distinct estado FROM clientes order by estado", res);
+})
+
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
   let cliente = req.headers['sel-lig-cli'];
   let data1 = req.headers['sel-lig-dt1'] || '';
