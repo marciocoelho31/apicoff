@@ -76,11 +76,48 @@ function execSQLQuery(sqlQry, res){
 }
 
 app.get('/atendimento', verifyJWT, (req, res, next) => {
-  execSQLQuery("SELECT * FROM pendencias where not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL' order by prior", res);
+
+  let cliente = req.headers['sel-atend-cli'];
+  let data1 = req.headers['sel-atend-dt1'] || '';
+  let data2 = req.headers['sel-atend-dt2'] || '';
+  let opitem = req.headers['sel-atend-opitem'];
+  let pesquisa = "SELECT * FROM pendencias where not isnull(cliente)";
+  if (cliente != "") {
+    pesquisa += " and cliente='" + cliente + "'";
+  }
+  if (data1 != '' && data2 != '') {
+    pesquisa += " and not isnull(datapos) and datapos>='" + data1.substr(0, 10) + "' and datapos<='" + data2.substr(0, 10) + "'";
+  }
+  if (opitem == "1") {
+    pesquisa += " and posicao='DISPONÍVEL'";
+    pesquisa += " order by datapos desc"
+  }
+  else if (opitem == "2") {
+    pesquisa += " and not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL'";
+    pesquisa += " order by prior"
+  }
+  else if (opitem == "3") {
+    pesquisa += " and not isnull(prior) and prior>0 and posicao='EM ANÁLISE'";
+    pesquisa += " order by datapos desc"
+  }
+  else if (opitem == "4") {
+    pesquisa += " and not isnull(prior) and prior>0 and posicao='EM PRODUÇÃO'";
+    pesquisa += " order by datapos desc"
+  }
+  else {
+    pesquisa += " order by datapos desc"
+  }
+
+  execSQLQuery(pesquisa, res);
 })
 
 app.get('/clientes', verifyJWT, (req, res, next) => {
-  execSQLQuery("SELECT * FROM clientes where autorizado='SIM'", res);
+  let pesquisa = "SELECT * FROM clientes where autorizado='SIM'";
+  execSQLQuery(pesquisa, res);
+})
+
+app.get('/clientesnome', verifyJWT, (req, res, next) => {
+  execSQLQuery("SELECT nome FROM clientes order by nome", res);
 })
 
 app.get('/clientesnome', verifyJWT, (req, res, next) => {
