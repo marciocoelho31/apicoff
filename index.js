@@ -82,29 +82,42 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
   let data2 = req.headers['sel-atend-dt2'] || '';
   let opitem = req.headers['sel-atend-opitem'];
   let pesquisa = "SELECT * FROM pendencias where not isnull(cliente)";
+  console.log(data1, data2);
   if (cliente != "") {
     pesquisa += " and cliente='" + cliente + "'";
   }
-  if (data1 != '' && data2 != '') {
-    pesquisa += " and not isnull(datapos) and datapos>='" + data1.substr(0, 10) + "' and datapos<='" + data2.substr(0, 10) + "'";
-  }
   if (opitem == "1") {
+    if (data1 != '' && data2 != '') {
+      pesquisa += " and not isnull(datapos) and datapos>='" + data1.substr(0, 10) + "' and datapos<='" + data2.substr(0, 10) + "'";
+    }
     pesquisa += " and posicao='DISPONÍVEL'";
     pesquisa += " order by datapos desc"
   }
   else if (opitem == "2") {
     pesquisa += " and not isnull(prior) and prior>0 and posicao<>'DISPONÍVEL'";
+    if (data1 != '' && data2 != '') {
+      pesquisa += " and not isnull(datasolic) and datasolic>='" + data1.substr(0, 10) + "' and datasolic<='" + data2.substr(0, 10) + "'";
+    }
     pesquisa += " order by prior"
   }
   else if (opitem == "3") {
     pesquisa += " and not isnull(prior) and prior>0 and posicao='EM ANÁLISE'";
+    if (data1 != '' && data2 != '') {
+      pesquisa += " and not isnull(datasolic) and datasolic>='" + data1.substr(0, 10) + "' and datasolic<='" + data2.substr(0, 10) + "'";
+    }
     pesquisa += " order by datapos desc"
   }
   else if (opitem == "4") {
     pesquisa += " and not isnull(prior) and prior>0 and posicao='EM PRODUÇÃO'";
+    if (data1 != '' && data2 != '') {
+      pesquisa += " and not isnull(datasolic) and datasolic>='" + data1.substr(0, 10) + "' and datasolic<='" + data2.substr(0, 10) + "'";
+    }
     pesquisa += " order by datapos desc"
   }
   else {
+    if (data1 != '' && data2 != '') {
+      pesquisa += " and not isnull(datapos) and datapos>='" + data1.substr(0, 10) + "' and datapos<='" + data2.substr(0, 10) + "'";
+    }
     pesquisa += " order by datapos desc"
   }
 
