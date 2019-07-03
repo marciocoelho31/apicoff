@@ -81,8 +81,16 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
   let data1 = req.headers['sel-atend-dt1'] || '';
   let data2 = req.headers['sel-atend-dt2'] || '';
   let opitem = req.headers['sel-atend-opitem'];
-  let pesquisa = "SELECT * FROM pendencias where not isnull(cliente)";
+
+  if (data1 == '' && data2 != '') {
+    data1 = new Date();
+  }
+  else if (data2 == '' && data1 != '') {
+    data2 = new Date();
+  }
   console.log(data1, data2);
+
+  let pesquisa = "SELECT * FROM pendencias where not isnull(cliente)";
   if (cliente != "") {
     pesquisa += " and cliente='" + cliente + "'";
   }
