@@ -127,8 +127,36 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
 })
 
 app.get('/clientes', verifyJWT, (req, res, next) => {
-  let pesquisa = "SELECT * FROM clientes where not isnull(nome) order by nome";
-  // montar pesquisa...
+  let sistema = req.headers['sel-cli-sist'];
+  let cidade = req.headers['sel-cli-cid'];
+  let estado = req.headers['sel-cli-est'];
+  let opaut = req.headers['sel-cli-aut'];
+  let opcobr = req.headers['sel-cli-cobr'];
+
+  let pesquisa = "SELECT nome FROM clientes where not isnull(nome)";
+  if (sistema != "") {
+    pesquisa += " and sistema='" + sistema + "'";
+  }
+  if (cidade != "") {
+    pesquisa += " and cidade='" + cidade + "'";
+  }
+  if (estado != "") {
+    pesquisa += " and estado='" + estado + "'";
+  }
+  if (opaut == "1") {
+    pesquisa += " and not isnull(autorizado) and autorizado='SIM'"
+  }
+  else if (opaut == "2") {
+    pesquisa += " and not isnull(autorizado) and autorizado='NÃO'"
+  }
+  if (opcobr == "1") {
+    pesquisa += " and not isnull(cobranca) and cobranca='S'"
+  }
+  else if (opcobr == "2") {
+    pesquisa += " and not isnull(cobranca) and cobranca='N'"
+  }
+  pesquisa += " order by nome";
+
   execSQLQuery(pesquisa, res);
 })
 
