@@ -245,11 +245,14 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
   execSQLQuery(pesquisa, res);
 })
 
-// app.get('/atendimento/:id?', verifyJWT, (req, res) =>{
-//   let filter = '';
-//   if(req.params.id) filter = ' WHERE ID=' + parseInt(req.params.id);
-//   execSQLQuery('SELECT ' + campos + ' FROM pendencias' + filter, res);
-// })
+app.post('/atendimento/novo', verifyJWT, (req, res, next) => {
+  let cliente = req.headers['dados-atend-cli'];
+  let prior = req.headers['dados-atend-prior'];
+
+  let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente) values ('" + cliente + "', " + prior + ", 1, 0)";
+
+  execSQLQuery(comando, res);
+})
 
 // Proxy request
 var server = http.createServer(app);
