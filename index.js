@@ -248,8 +248,22 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
 app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   let cliente = req.headers['dados-atend-cli'];
   let prior = req.headers['dados-atend-prior'];
+  let tipo = req.headers['dados-atend-tipo'];
+  let descricao = req.headers['dados-atend-descricao'];
+  let tipoD = '';
+  if (tipo == 0) {
+    tipoD = 'ERRO';
+  }
+  else if (tipo == 1) {
+    tipoD = 'AJUSTE';
+  }
+  else if (tipo == 2) {
+    tipoD = 'SUGESTÃO';
+  }
 
-  let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente) values ('" + cliente + "', " + prior + ", 1, 0)";
+  let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
+  "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
+  "'" + tipoD + "', '" + descricao + "', da, '', da, 'CASTER OFFICE MOBILE', 'INTERNET', '', 'CASTER OFFICE MOBILE', '', da, '')";
 
   execSQLQuery(comando, res);
 })
