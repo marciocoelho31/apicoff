@@ -254,6 +254,7 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   let posicao = req.headers['dados-atend-posicao'];
   let ddata1 = new Date();
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
+  let hora1 = ddata1.getHours().toString().padStart(2, "0") + ":" + ddata1.getMinutes().toString().padStart(2, "0");
 
   let tipoD = '';
   if (tipo == 0) {
@@ -279,10 +280,17 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
     posicaoD = 'DISPONÍVEL';
   }
 
+  let sistema = '';
+  execSQLQuery("select sistema from clientes where nome='" + cliente + "'", resc)
+    .then(resc => {
+      console.log('json', resc.json());
+       //sistema = resc.json() 
+    })
+
   let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
   "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
-  "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '', '" + solic + "', " + 
-  "'INTERNET', 'CASTER OFFICE MOBILE', '', '" + data1 + "', '" + descricao + "')";
+  "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
+  "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
 
   execSQLQuery(comando, res);
 })
