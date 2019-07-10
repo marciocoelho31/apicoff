@@ -293,7 +293,8 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
       if(!error) {
         for (let i in results) {
             sistema = results[i]['sistema'];
-            break;
+            console.log('results[i]', results[i]);
+            console.log('sistema', sistema);
         }
       }
       connection.end();
