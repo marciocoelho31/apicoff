@@ -281,10 +281,21 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   }
 
   let sistema = '';
-  execSQLQuery("select sistema from clientes where nome='" + cliente + "'", sistema)
-    .then(sistema => {
-      console.log('json sistema', sistema.json());
-    })
+  const connection = mysql.createConnection({
+    host     : process.env.BDHOST,
+    port     : process.env.BDPORT,
+    user     : process.env.BDUSER,
+    password : process.env.BDPWD,
+    database : process.env.BDNAME
+  });
+
+  connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
+      if(!error) {
+        sistema = results;
+        console.log('results', results);
+      }
+      connection.end();
+  });
 
   let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
   "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
