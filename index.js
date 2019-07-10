@@ -250,6 +250,11 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   let prior = req.headers['dados-atend-prior'];
   let tipo = req.headers['dados-atend-tipo'];
   let descricao = req.headers['dados-atend-descricao'];
+  let solic = req.headers['dados-atend-solic'];
+  let posicao = req.headers['dados-atend-posicao'];
+  let ddata1 = new Date();
+  let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
+
   let tipoD = '';
   if (tipo == 0) {
     tipoD = 'ERRO';
@@ -260,11 +265,24 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   else if (tipo == 2) {
     tipoD = 'SUGESTÃO';
   }
+  let posicaoD = '';
+  if (posicao == 0) {
+    posicaoD = 'EM DESENVOLVIMENTO';
+  }
+  else if (posicao == 1) {
+    posicaoD = 'EM ANÁLISE';
+  }
+  else if (posicao == 2) {
+    posicaoD = 'EM PRODUÇÃO';
+  }
+  else if (posicao == 3) {
+    posicaoD = 'DISPONÍVEL';
+  }
 
   let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
   "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
-  "'" + tipoD + "', '" + descricao + "', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', 'CASTER OFFICE MOBILE', 'INTERNET', " + 
-  "'', 'CASTER OFFICE MOBILE', '', '0000-00-00 00:00:00', '')";
+  "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '', '" + solic + "', " + 
+  "'INTERNET', 'CASTER OFFICE MOBILE', '', '" + data1 + "', '" + descricao + "')";
 
   execSQLQuery(comando, res);
 })
