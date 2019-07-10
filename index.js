@@ -289,12 +289,11 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
     database : process.env.BDNAME
   });
 
-  connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
+  await connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
       if(!error) {
         for (let i in results) {
             sistema = results[i]['sistema'];
-            console.log('results[i]', results[i]);
-            console.log('sistema', sistema);
+            break;
         }
       }
       connection.end();
