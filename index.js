@@ -126,6 +126,11 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
   execSQLQuery(pesquisa, res);
 })
 
+app.get('/atendimento/maxprior', verifyJWT, (req, res, next) => {
+  let pesquisa = "SELECT max(prior) FROM pendencias";
+  execSQLQuery(pesquisa, res);
+})
+
 app.get('/clientes', verifyJWT, (req, res, next) => {
   let sistema = req.headers['sel-cli-sist'];
   let cidade = req.headers['sel-cli-cid'];
