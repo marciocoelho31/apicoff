@@ -263,7 +263,8 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
 
   let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
   "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
-  "'" + tipoD + "', '" + descricao + "', da, '', da, 'CASTER OFFICE MOBILE', 'INTERNET', '', 'CASTER OFFICE MOBILE', '', da, '')";
+  "'" + tipoD + "', '" + descricao + "', '0000-00-00 00:00:00', '', '0000-00-00 00:00:00', 'CASTER OFFICE MOBILE', 'INTERNET', " + 
+  "'', 'CASTER OFFICE MOBILE', '', '0000-00-00 00:00:00', '')";
 
   execSQLQuery(comando, res);
 })
