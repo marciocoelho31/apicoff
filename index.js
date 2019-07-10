@@ -127,7 +127,7 @@ app.get('/atendimento', verifyJWT, (req, res, next) => {
 })
 
 app.get('/atendimento/maxprior', verifyJWT, (req, res, next) => {
-  let pesquisa = "SELECT max(prior) FROM pendencias";
+  let pesquisa = "SELECT max(prior) as prior FROM pendencias";
   execSQLQuery(pesquisa, res);
 })
 
