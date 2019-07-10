@@ -281,10 +281,9 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   }
 
   let sistema = '';
-  execSQLQuery("select sistema from clientes where nome='" + cliente + "'", resc)
-    .then(resc => {
-      console.log('json', resc.json());
-       //sistema = resc.json() 
+  execSQLQuery("select sistema from clientes where nome='" + cliente + "'", sistema)
+    .then(sistema => {
+      console.log('json sistema', sistema.json());
     })
 
   let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
