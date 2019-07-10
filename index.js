@@ -245,7 +245,7 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
   execSQLQuery(pesquisa, res);
 })
 
-app.post('/atendimento/novo', verifyJWT, (req, res, next) => {
+app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   let cliente = req.headers['dados-atend-cli'];
   let prior = req.headers['dados-atend-prior'];
 
