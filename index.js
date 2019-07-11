@@ -281,20 +281,7 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
     posicaoD = 'DISPONÍVEL';
   }
 
-  const connection = mysql.createConnection({
-    host     : process.env.BDHOST,
-    port     : process.env.BDPORT,
-    user     : process.env.BDUSER,
-    password : process.env.BDPWD,
-    database : process.env.BDNAME
-  });
-
-  console.log('vai abrir conexao');
-  connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
-      console.log('results', results);
-      connection.end();
-  });
-  console.log('fechou conexao');
+  sistema = pesquisaSistemaCliente(cliente);
 
   let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
   "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
@@ -305,6 +292,24 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   console.log('terminou de gravar atendimento');
 
 })
+
+async function pesquisaSistemaCliente(cliente) {
+  const connection = mysql.createConnection({
+    host     : process.env.BDHOST,
+    port     : process.env.BDPORT,
+    user     : process.env.BDUSER,
+    password : process.env.BDPWD,
+    database : process.env.BDNAME
+  });
+
+  console.log('vai abrir conexao');
+  await connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
+      console.log('results', results);
+      connection.end();
+  });
+  console.log('fechou conexao');
+  return "TESTE";
+}
 
 // Proxy request
 var server = http.createServer(app);
