@@ -165,6 +165,12 @@ app.get('/clientes', verifyJWT, (req, res, next) => {
   execSQLQuery(pesquisa, res);
 })
 
+app.get('/clientes/telefone', verifyJWT, (req, res, next) => {
+  let cliente = req.headers['x-cli-pesq'];
+  let pesquisa = "SELECT telefone FROM clientes where not isnull(nome) and nome='" + cliente + "'";
+  execSQLQuery(pesquisa, res);
+})
+
 app.get('/clientesnome', verifyJWT, (req, res, next) => {
   execSQLQuery("SELECT nome FROM clientes order by nome", res);
 })
