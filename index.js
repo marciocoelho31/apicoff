@@ -208,7 +208,7 @@ app.get('/ligacoes', verifyJWT, (req, res, next) => {
   if (data1 != '' && data2 != '') {
     pesquisa += " and not isnull(data) and data>='" + data1.substr(0, 10) + "' and data<='" + data2.substr(0, 10) + "'";
   }
-  pesquisa += " order by data desc";
+  pesquisa += " order by data desc, hora desc";
 
   execSQLQuery(pesquisa, res);
 })
