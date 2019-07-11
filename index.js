@@ -246,7 +246,7 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
 })
 
 app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
-  gravaAtendimento();
+  gravaAtendimento(req, res);
 })
 
 async function gravaAtendimento() {
