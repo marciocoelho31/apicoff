@@ -246,10 +246,6 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
 })
 
 app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
-  gravaAtendimento(req, res);
-})
-
-async function gravaAtendimento(req, res) {
   let cliente = req.headers['dados-atend-cli'];
   let prior = req.headers['dados-atend-prior'];
   let tipo = req.headers['dados-atend-tipo'];
@@ -294,21 +290,26 @@ async function gravaAtendimento(req, res) {
   });
 
   console.log('vai abrir conexao');
-  await connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
+  connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
       console.log('results', results);
+
+      for (let i in registros) {
+        sistema = registros[i]['sistema'];
+        console.log('sistema =', sistema);
+        break;
+      }
+
+      let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
+      "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
+      "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
+      "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
+      execSQLQuery(comando, res);
+      console.log('gravou atendimento');
+
       connection.end();
   });
-  console.log('fechou conexao');
-
-  let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
-  "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
-  "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
-  "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
-  execSQLQuery(comando, res);
-
-  console.log('terminou de gravar atendimento');
-
-}
+  console.log('fechou connection');
+})
 
 // Proxy request
 var server = http.createServer(app);
