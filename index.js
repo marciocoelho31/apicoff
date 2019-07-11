@@ -309,6 +309,40 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   });
 })
 
+app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
+  let empresa = req.headers['dados-lig-empresa'];
+  let ddata = req.headers['dados-lig-data'];
+  let hora = req.headers['dados-lig-hora'];
+  let contint = req.headers['dados-lig-contint'];
+  let context = req.headers['dados-lig-context'];
+  let telef = req.headers['dados-lig-telef'];
+  let posicao = req.headers['dados-lig-pos'];
+  let ddata1 = new Date(ddata);
+  let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
+  
+  const connection = mysql.createConnection({
+    host     : process.env.BDHOST,
+    port     : process.env.BDPORT,
+    user     : process.env.BDUSER,
+    password : process.env.BDPWD,
+    database : process.env.BDNAME
+  });
+
+  connection.query("select E_MAIL from clientes where nome='" + empresa + "'", function(error, results, fields){
+      let email = ''
+      for (let i in results) {
+        email = results[i]['E_MAIL'];
+        break;
+      }
+        let comando = "insert into rcp (data, hora, contint, context, local, telcont, posicao, tipo, ct, email) " + 
+        "values ('" + data1 + "', '" + hora + "', '" + contint + "', '" + context.substr(0, 30) + "', " + 
+        "'" + empresa.substr(0, 40) + "', '" + telef.substr(0, 50) + "', '" + posicao.substr(0, 30) + "', " + 
+        "'R', 'T', '" + email.substr(0, 50) + "')";
+        execSQLQuery(comando, res);
+      connection.end();
+  });
+})
+
 // Proxy request
 var server = http.createServer(app);
 var port = process.env.PORT || 3000;
