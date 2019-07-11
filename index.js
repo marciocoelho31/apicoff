@@ -249,7 +249,7 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   gravaAtendimento(req, res);
 })
 
-async function gravaAtendimento() {
+async function gravaAtendimento(req, res) {
   let cliente = req.headers['dados-atend-cli'];
   let prior = req.headers['dados-atend-prior'];
   let tipo = req.headers['dados-atend-tipo'];
