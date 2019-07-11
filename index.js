@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.get('/', (req, res, next) => {
-  console.log('Api funcionando...');
+  console.log('...');
 })
 
 app.post('/login', (req, res, next) => {
@@ -289,26 +289,18 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
     database : process.env.BDNAME
   });
 
-  console.log('vai abrir conexao');
   connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
-      console.log('results', results);
-
       for (let i in results) {
         sistema = results[i]['sistema'];
-        console.log('sistema =', sistema);
         break;
       }
-
-      let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
-      "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
-      "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
-      "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
-      execSQLQuery(comando, res);
-      console.log('gravou atendimento');
-
+        let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
+        "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
+        "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
+        "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
+        execSQLQuery(comando, res);
       connection.end();
   });
-  console.log('fechou connection');
 })
 
 // Proxy request
