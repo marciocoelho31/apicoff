@@ -283,14 +283,6 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
 
   sistema = pesquisaSistemaCliente(cliente);
 
-  let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
-  "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
-  "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
-  "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
-  execSQLQuery(comando, res);
-
-  console.log('terminou de gravar atendimento');
-
 })
 
 async function pesquisaSistemaCliente(cliente) {
@@ -302,13 +294,15 @@ async function pesquisaSistemaCliente(cliente) {
     database : process.env.BDNAME
   });
 
+  let sistemaCli = 'TESTE';
   console.log('vai abrir conexao');
   await connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
       console.log('results', results);
       connection.end();
-  });
+  }).then(response => sistemaCli = response.text())
   console.log('fechou conexao');
-  return "TESTE";
+
+  return sistemaCli;
 }
 
 // Proxy request
