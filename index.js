@@ -246,6 +246,10 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
 })
 
 app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
+  gravaAtendimento();
+})
+
+async function gravaAtendimento() {
   let cliente = req.headers['dados-atend-cli'];
   let prior = req.headers['dados-atend-prior'];
   let tipo = req.headers['dados-atend-tipo'];
@@ -281,11 +285,6 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
     posicaoD = 'DISPONÍVEL';
   }
 
-  sistema = pesquisaSistemaCliente(cliente);
-
-})
-
-async function pesquisaSistemaCliente(cliente) {
   const connection = mysql.createConnection({
     host     : process.env.BDHOST,
     port     : process.env.BDPORT,
@@ -294,15 +293,21 @@ async function pesquisaSistemaCliente(cliente) {
     database : process.env.BDNAME
   });
 
-  let sistemaCli = 'TESTE';
   console.log('vai abrir conexao');
   await connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
       console.log('results', results);
       connection.end();
-  }).then(response => sistemaCli = response.text())
+  });
   console.log('fechou conexao');
 
-  return sistemaCli;
+  let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
+  "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
+  "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
+  "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
+  execSQLQuery(comando, res);
+
+  console.log('terminou de gravar atendimento');
+
 }
 
 // Proxy request
