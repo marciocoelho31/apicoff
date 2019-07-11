@@ -317,10 +317,8 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
   let context = req.headers['dados-lig-context'];
   let telef = req.headers['dados-lig-telef'];
   let posicao = req.headers['dados-lig-pos'];
-  console.log('datarcp', ddata)
   let ddata1 = new Date(ddata);
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
-  console.log('data1', data1)
   
   const connection = mysql.createConnection({
     host     : process.env.BDHOST,
