@@ -293,8 +293,8 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   connection.query("select sistema from clientes where nome='" + cliente + "'", function(error, results, fields){
       console.log('results', results);
 
-      for (let i in registros) {
-        sistema = registros[i]['sistema'];
+      for (let i in results) {
+        sistema = results[i]['sistema'];
         console.log('sistema =', sistema);
         break;
       }
