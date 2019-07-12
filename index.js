@@ -315,8 +315,8 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
   let hora = req.headers['dados-lig-hora'];
   let contint = req.headers['dados-lig-contint'];
   let context = req.headers['dados-lig-context'];
-  let telef = req.headers['dados-lig-telef'];
-  let posicao = req.headers['dados-lig-pos'];
+  let telef = req.headers['dados-vi-telef'];
+  let posicao = req.headers['dados-vi-pos'];
   let ddata1 = new Date(ddata);
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
   
@@ -338,6 +338,42 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
         "values ('" + data1 + "', '" + hora + "', '" + contint + "', '" + context.substr(0, 30) + "', " + 
         "'" + empresa.substr(0, 40) + "', '" + telef.substr(0, 50) + "', '" + posicao.substr(0, 30) + "', " + 
         "'R', 'T', '" + email.substr(0, 50) + "')";
+        execSQLQuery(comando, res);
+      connection.end();
+  });
+})
+
+app.get('/visitas/novo', verifyJWT, (req, res, next) => {
+  let empresa = req.headers['dados-vis-empresa'];
+  let ddata = req.headers['dados-vis-data'];
+  let hora = req.headers['dados-vis-hora'];
+  let contint = req.headers['dados-vis-contint'];
+  let context = req.headers['dados-vis-context'];
+  let telef = req.headers['dados-vis-telef'];
+  let posicao = req.headers['dados-vis-pos'];
+  let ddata1 = new Date(ddata);
+  let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
+  
+  const connection = mysql.createConnection({
+    host     : process.env.BDHOST,
+    port     : process.env.BDPORT,
+    user     : process.env.BDUSER,
+    password : process.env.BDPWD,
+    database : process.env.BDNAME
+  });
+
+  connection.query("select ENDERECO, BAIRRO, CIDADE from clientes where nome='" + empresa + "'", function(error, results, fields){
+      let endereco = '', bairro = '', cidade = ''
+      for (let i in results) {
+        endereco = results[i]['ENDERECO'];
+        bairro = results[i]['BAIRRO'];
+        cidade = results[i]['CIDADE'];
+        break;
+      }
+        let comando = "insert into agenda (data, hora, contint, context, local, telcont, descricao, tipo, ct, endereco, bairro, cidade) " + 
+        "values ('" + data1 + "', '" + hora + "', '" + contint + "', '" + context.substr(0, 30) + "', " + 
+        "'" + empresa.substr(0, 40) + "', '" + telef.substr(0, 30) + "', '" + posicao + "', " + 
+        "'P', 'T', '" + endereco.substr(0, 60) + "', '" + bairro.substr(0, 30) + "', '" + cidade.substr(0, 30) + "')";
         execSQLQuery(comando, res);
       connection.end();
   });
