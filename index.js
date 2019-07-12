@@ -356,6 +356,14 @@ app.post('/visitas/novo', verifyJWT, (req, res, next) => {
   let ddata1 = new Date(ddata);
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
 
+  console.log(1, empresa)
+  console.log(2, contint)
+  console.log(3, context)
+  console.log(4, telef)
+  console.log(5, posicao)
+  console.log(6, ddata)
+  console.log(7, hora)
+
   const connection = mysql.createConnection({
     host     : process.env.BDHOST,
     port     : process.env.BDPORT,
