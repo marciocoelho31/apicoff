@@ -311,7 +311,7 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
   });
 })
 
-app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
+app.post('/ligacoes/novo', verifyJWT, (req, res, next) => {
   let empresa = req.headers['dados-lig-empresa'];
   let ddata = req.headers['dados-lig-data'];
   let hora = req.headers['dados-lig-hora'];
