@@ -253,7 +253,7 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
   execSQLQuery(pesquisa, res);
 })
 
-app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
+app.post('/atendimento/novo', verifyJWT, (req, res, next) => {
   let cliente = req.body.cliente;
   let prior = req.body.prior;
   let tipo = req.body.tipo;
@@ -345,7 +345,7 @@ app.post('/ligacoes/novo', verifyJWT, (req, res, next) => {
   });
 })
 
-app.get('/visitas/novo', verifyJWT, (req, res, next) => {
+app.post('/visitas/novo', verifyJWT, (req, res, next) => {
   let ddata = req.headers['dados-vis-data'];
   let hora = req.headers['dados-vis-hora'];
   let empresa = req.body.empresa;
