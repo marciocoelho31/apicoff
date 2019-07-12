@@ -332,7 +332,9 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
     database : process.env.BDNAME
   });
 
-  console.log('headers', req.headers.toString());
+  req.headers.forEach(element => {
+    console.log('header x', element);
+  });
 
   connection.query("select E_MAIL from clientes where nome='" + empresa + "'", function(error, results, fields){
       let email = ''
