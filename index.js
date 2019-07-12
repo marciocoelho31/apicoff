@@ -254,12 +254,12 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
 })
 
 app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
-  let cliente = req.headers['dados-atend-cli'];
-  let prior = req.headers['dados-atend-prior'];
-  let tipo = req.headers['dados-atend-tipo'];
-  let descricao = req.headers['dados-atend-descricao'];
-  let solic = req.headers['dados-atend-solic'];
-  let posicao = req.headers['dados-atend-posicao'];
+  let cliente = req.body.cliente;
+  let prior = req.body.prior;
+  let tipo = req.body.tipo;
+  let descricao = req.body.descricao;
+  let solic = req.body.solic;
+  let posicao = req.body.posicao;
   let sistema = '';
   let ddata1 = new Date();
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
@@ -312,13 +312,12 @@ app.get('/atendimento/novo', verifyJWT, (req, res, next) => {
 })
 
 app.post('/ligacoes/novo', verifyJWT, (req, res, next) => {
-  let empresa = req.headers['dados-lig-empresa'];
   let ddata = req.headers['dados-lig-data'];
   let hora = req.headers['dados-lig-hora'];
-  let contint = req.headers['dados-lig-contint'];
-  let context = req.headers['dados-lig-context'];
-  let telef = req.headers['dados-lig-telef'];
-//  let posicao = req.headers['dados-lig-pos'];
+  let empresa = req.body.empresa;
+  let contint = req.body.contint;
+  let context = req.body.context;
+  let telef = req.body.telef;
   let posicao = req.body.posicao;
   let ddata1 = new Date(ddata);
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
@@ -347,13 +346,13 @@ app.post('/ligacoes/novo', verifyJWT, (req, res, next) => {
 })
 
 app.get('/visitas/novo', verifyJWT, (req, res, next) => {
-  let empresa = req.headers['dados-vis-empresa'];
   let ddata = req.headers['dados-vis-data'];
   let hora = req.headers['dados-vis-hora'];
-  let contint = req.headers['dados-vis-contint'];
-  let context = req.headers['dados-vis-context'];
-  let telef = req.headers['dados-vis-telef'];
-  let posicao = req.headers['dados-vis-pos'];
+  let empresa = req.body.empresa;
+  let contint = req.body.contint;
+  let context = req.body.context;
+  let telef = req.body.telef;
+  let posicao = req.body.posicao;
   let ddata1 = new Date(ddata);
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
 
