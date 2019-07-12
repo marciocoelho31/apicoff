@@ -333,7 +333,7 @@ app.post('/ligacoes/novo', verifyJWT, (req, res, next) => {
   connection.query("select E_MAIL from clientes where nome='" + empresa + "'", function(error, results, fields){
       let email = ''
       for (let i in results) {
-        email = results[i]['E_MAIL'];
+        email = results[i]['E_MAIL'] || '';
         break;
       }
         let comando = "insert into rcp (data, hora, contint, context, local, telcont, posicao, tipo, ct, email) " + 
@@ -367,9 +367,9 @@ app.post('/visitas/novo', verifyJWT, (req, res, next) => {
   connection.query("select ENDERECO, BAIRRO, CIDADE from clientes where nome='" + empresa + "'", function(error, results, fields){
       let endereco = '', bairro = '', cidade = ''
       for (let i in results) {
-        endereco = results[i]['ENDERECO'];
-        bairro = results[i]['BAIRRO'];
-        cidade = results[i]['CIDADE'];
+        endereco = results[i]['ENDERECO'] || '';
+        bairro = results[i]['BAIRRO'] || '';
+        cidade = results[i]['CIDADE'] || '';
         break;
       }
         let comando = "insert into agenda (data, hora, contint, context, local, telcont, descricao, tipo, ct, endereco, bairro, cidade) " + 
