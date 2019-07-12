@@ -234,9 +234,9 @@ app.get('/visitas', verifyJWT, (req, res, next) => {
   }
   else if (data1 == '' && data2 == '') {
     ddata1 = new Date();
-    data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
+    data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + (ddata1.getDate() - 5).toString().padStart(2, "0");
     ddata2 = new Date();
-    data2 = ddata2.getFullYear() + "-" + parseInt(ddata2.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata2.getDate().toString().padStart(2, "0");
+    data2 = ddata2.getFullYear() + "-" + parseInt(ddata2.getMonth() + 1).toString().padStart(2, "0") + "-" + (ddata2.getDate() + 15).toString().padStart(2, "0");
   }
 
   let pesquisa = "SELECT * FROM agenda where not isnull(local)";
