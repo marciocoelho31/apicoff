@@ -318,7 +318,8 @@ app.post('/ligacoes/novo', verifyJWT, (req, res, next) => {
   let contint = req.headers['dados-lig-contint'];
   let context = req.headers['dados-lig-context'];
   let telef = req.headers['dados-lig-telef'];
-  let posicao = req.headers['dados-lig-pos'];
+//  let posicao = req.headers['dados-lig-pos'];
+  let posicao = req.body.posicao;
   let ddata1 = new Date(ddata);
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
 
