@@ -6,7 +6,6 @@ var jwt = require('jsonwebtoken');
 var http = require('http');
 
 const express = require('express')
-const bodyParser = require('body-parser')
 const app = express()
 
 var cookieParser = require('cookie-parser');
@@ -17,9 +16,8 @@ const mysql = require('mysql');
 
 app.use(logger('dev'));
 app.use(helmet());
-//app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded({ extended: true, defaultCharset: 'iso-8859-1' }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(cookieParser());
 
 app.get('/', (req, res, next) => {
@@ -330,10 +328,6 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
     user     : process.env.BDUSER,
     password : process.env.BDPWD,
     database : process.env.BDNAME
-  });
-
-  req.headers.forEach(element => {
-    console.log('header x', element);
   });
 
   connection.query("select E_MAIL from clientes where nome='" + empresa + "'", function(error, results, fields){
