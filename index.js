@@ -334,6 +334,14 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
         email = results[i]['E_MAIL'];
         break;
       }
+        console.log('1', data1);
+        console.log('2', hora);
+        console.log('3', contint);
+        console.log('4', context);
+        console.log('5', empresa);
+        console.log('6', telef);
+        console.log('7', posicao);
+        console.log('8', email);
         let comando = "insert into rcp (data, hora, contint, context, local, telcont, posicao, tipo, ct, email) " + 
         "values ('" + data1 + "', '" + hora + "', '" + contint + "', '" + context.substr(0, 30) + "', " + 
         "'" + empresa.substr(0, 40) + "', '" + telef.substr(0, 50) + "', '" + posicao.substr(0, 30) + "', " + 
