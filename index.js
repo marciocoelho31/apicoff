@@ -16,7 +16,7 @@ const mysql = require('mysql');
 app.use(logger('dev'));
 app.use(helmet());
 //app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded({ defaultCharset: 'iso-8859-1' }));
+app.use(bodyParser.urlencoded({ extended: true, defaultCharset: 'iso-8859-1' }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
