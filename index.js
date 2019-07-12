@@ -4,12 +4,14 @@ require('dotenv-safe').config({
 var jwt = require('jsonwebtoken');
 
 var http = require('http');
+
 const express = require('express')
+const bodyParser = require('body-parser')
 const app = express()
+
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const helmet = require('helmet');
-var bodyParser = require('body-parser')
 
 const mysql = require('mysql');
 
@@ -329,6 +331,8 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
     password : process.env.BDPWD,
     database : process.env.BDNAME
   });
+
+  console.log('headers', req.headers.toString());
 
   connection.query("select E_MAIL from clientes where nome='" + empresa + "'", function(error, results, fields){
       let email = ''
