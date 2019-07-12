@@ -322,8 +322,6 @@ app.get('/ligacoes/novo', verifyJWT, (req, res, next) => {
   let ddata1 = new Date(ddata);
   let data1 = ddata1.getFullYear() + "-" + parseInt(ddata1.getMonth() + 1).toString().padStart(2, "0") + "-" + ddata1.getDate().toString().padStart(2, "0");
 
-  console.log(req.headers);
-  
   const connection = mysql.createConnection({
     host     : process.env.BDHOST,
     port     : process.env.BDPORT,
