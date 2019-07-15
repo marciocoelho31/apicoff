@@ -133,6 +133,12 @@ app.get('/atendimento/maxprior', verifyJWT, (req, res, next) => {
   execSQLQuery(pesquisa, res);
 })
 
+app.get('/atendimento/:id?', verifyJWT, (req, res) =>{
+  let filter = '';
+  if(req.params.id) filter = ' WHERE ID=' + parseInt(req.params.id);
+  execSQLQuery('SELECT * FROM pendencias' + filter, res);
+})
+
 app.get('/clientes', verifyJWT, (req, res, next) => {
   let sistema = req.headers['sel-cli-sist'];
   let cidade = req.headers['sel-cli-cid'];
