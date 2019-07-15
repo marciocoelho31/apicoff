@@ -140,7 +140,7 @@ app.get('/clientes', verifyJWT, (req, res, next) => {
   let opaut = req.headers['sel-cli-aut'];
   let opcobr = req.headers['sel-cli-cobr'];
 
-  let pesquisa = "SELECT nome FROM clientes where not isnull(nome)";
+  let pesquisa = "SELECT nome, id FROM clientes where not isnull(nome)";
   if (sistema != "") {
     pesquisa += " and sistema='" + sistema + "'";
   }
