@@ -189,6 +189,12 @@ app.get('/clientes/estados', verifyJWT, (req, res, next) => {
   execSQLQuery("SELECT distinct estado FROM clientes order by estado", res);
 })
 
+app.get('/clientes/:id?', verifyJWT, (req, res) =>{
+  let filter = '';
+  if(req.params.id) filter = ' WHERE ID=' + parseInt(req.params.id);
+  execSQLQuery('SELECT * FROM clientes' + filter, res);
+})
+
 app.get('/ligacoes', verifyJWT, (req, res, next) => {
   let cliente = req.headers['sel-lig-cli'];
   let data1 = req.headers['sel-lig-dt1'] || '';
