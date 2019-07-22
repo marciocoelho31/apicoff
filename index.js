@@ -448,53 +448,42 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
         itemOK = 1;
       }
 
+      console.log('prior', prior);
+      console.log('antPrior', antPrior);
+      console.log('posicaoD', posicaoD);
+
       if (prior != '0' && prior != '') {
         if (posicaoD != 'DISPONÍVEL') {
           if (prior != antPrior) {
             if (parseInt(prior) < parseInt(antPrior)) {
               let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).toString() + 
                 " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
-                console.log('comando', comando);
-                console.log('sqlQry', sqlQry);
-                comando.concat(sqlQry);
-                console.log('comando+sqlQry', comando);
+              comando = comando + sqlQry;
             }
             else if (parseInt(prior) > parseInt(antPrior)) {
               let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
                 " AND PRIOR<=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
-              console.log('comando', comando);
-              console.log('sqlQry', sqlQry);
-              comando.concat(sqlQry);
-              console.log('comando+sqlQry', comando);
+              comando = comando + sqlQry;
             }
           }
         } else {
           let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
-          console.log('comando', comando);
-          console.log('sqlQry', sqlQry);
-          comando.concat(sqlQry);
-          console.log('comando+sqlQry', comando);
+          comando = comando + sqlQry;
         }
       }
       if (itemOK == 1){
         let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
-        console.log('comando', comando);
-        console.log('sqlQry', sqlQry);
-        comando.concat(sqlQry);
-        console.log('comando+sqlQry', comando);
+        comando = comando + sqlQry;
       }
 
       let ultcomando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
         "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId.toString();
-      console.log('comando', comando);
-      console.log('ultcomando', ultcomando);
-      comando.concat(ultcomando);
-      console.log('comando+ultcomando', comando);
+      comando = comando + ultcomando;
       
   }).end();
 
   //connection.query(comando, function(error, results, fields){}).end();
-  console.log('comando', comando);
+  console.log('comando final', comando);
   if (comando != '') execSQLQuery(comando, res);
 
 })
