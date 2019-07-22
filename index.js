@@ -451,12 +451,12 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
         if (posicaoD != 'DISPONÍVEL') {
           if (prior != antPrior) {
             if (parseInt(prior) < parseInt(antPrior)) {
-              execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).ToString() + 
-                " AND PRIOR>=" + parseInt(prior).ToString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendid).ToString(), res);
+              execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).toString() + 
+                " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendid).toString(), res);
             }
             else if (parseInt(prior) > parseInt(antPrior)) {
               execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
-              " AND PRIOR<=" + parseInt(prior).ToString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).ToString());
+              " AND PRIOR<=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString());
             }
           }
         } else {
