@@ -315,9 +315,9 @@ app.post('/atendimento/novo', verifyJWT, (req, res, next) => {
         break;
       }
         let comando = "insert into pendencias (cliente, prior, NovoItem, Urgente, tipo, descricao, datasolic, posicao, datapos, " + 
-        "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig) values ('" + cliente + "', " + prior + ", 1, 0, " + 
+        "horapos, quemsolic, formasolic, usuario, sistema, dtlanc, descricaoorig, prog) values ('" + cliente + "', " + prior + ", 1, 0, " + 
         "'" + tipoD + "', '" + descricao + "', '" + data1 + "', '" + posicaoD + "', '" + data1 + "', '" + hora1 + "', '" + solic + "', " + 
-        "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "')";
+        "'INTERNET', 'CASTER OFFICE MOBILE', '" + sistema + "', '" + data1 + "', '" + descricao + "', 'MA')";
         execSQLQuery(comando, res);
       connection.end();
   });
