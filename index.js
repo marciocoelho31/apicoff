@@ -393,6 +393,44 @@ app.post('/visitas/novo', verifyJWT, (req, res, next) => {
   });
 })
 
+app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
+  let atendId = req.body.atendid;
+  let cliente = req.body.cliente;
+  let prior = req.body.prior;
+  let tipo = req.body.tipo;
+  let descricao = req.body.descricao;
+  let solic = req.body.solic;
+  let posicao = req.body.posicao;
+
+  let tipoD = '';
+  if (tipo == 0) {
+    tipoD = 'ERRO';
+  }
+  else if (tipo == 1) {
+    tipoD = 'AJUSTE';
+  }
+  else if (tipo == 2) {
+    tipoD = 'SUGESTÃO';
+  }
+  let posicaoD = '';
+  if (posicao == 0) {
+    posicaoD = 'EM DESENVOLVIMENTO';
+  }
+  else if (posicao == 1) {
+    posicaoD = 'EM ANÁLISE';
+  }
+  else if (posicao == 2) {
+    posicaoD = 'EM PRODUÇÃO';
+  }
+  else if (posicao == 3) {
+    posicaoD = 'DISPONÍVEL';
+  }
+
+  let comando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
+    "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId;
+  execSQLQuery(comando, res);
+})
+
 // Proxy request
 var server = http.createServer(app);
 var port = process.env.PORT || 3000;
