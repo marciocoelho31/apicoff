@@ -434,9 +434,9 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
     database : process.env.BDNAME
   });
 
+  let comando = '';
   connection.query("select prior, posicao from pendencias where id=" + atendId, function(error, results, fields){
       let antPrior = '', antPosicao = '';
-      let comando = '';
       for (let i in results) {
         antPrior = results[i]['prior'];
         antPosicao = results[i]['posicao'];
@@ -479,7 +479,7 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
   }).end();
 
   //connection.query(comando, function(error, results, fields){}).end();
-  execSQLQuery(comando, res);
+  if (comando != '') execSQLQuery(comando, res);
 
 })
 
