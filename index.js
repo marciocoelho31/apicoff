@@ -452,7 +452,7 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
           if (prior != antPrior) {
             if (parseInt(prior) < parseInt(antPrior)) {
               execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).toString() + 
-                " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendid).toString(), res);
+                " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString(), res);
             }
             else if (parseInt(prior) > parseInt(antPrior)) {
               execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
