@@ -451,44 +451,54 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
         if (posicaoD != 'DISPONÍVEL') {
           if (prior != antPrior) {
             if (parseInt(prior) < parseInt(antPrior)) {
-              let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).toString() + 
-                " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
-              connection.query(sqlQry, function(error)
-              {
-                if(error) res.json(error);
-              }).end();
-            }
-            else if (parseInt(prior) > parseInt(antPrior)) {
-              let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
-                " AND PRIOR<=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
+              try{
+                let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).toString() + 
+                  " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
                 connection.query(sqlQry, function(error)
                 {
                   if(error) res.json(error);
                 }).end();
-              }
+              } catch{}
+            }
+            else if (parseInt(prior) > parseInt(antPrior)) {
+              try{
+                let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
+                  " AND PRIOR<=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
+                connection.query(sqlQry, function(error)
+                {
+                  if(error) res.json(error);
+                }).end();
+              } catch{}
+            }
           }
         } else {
-          let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
-          connection.query(sqlQry, function(error)
-          {
-            if(error) res.json(error);
-          }).end();
+          try{
+            let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
+            connection.query(sqlQry, function(error)
+            {
+              if(error) res.json(error);
+            }).end();
+          } catch {}
       }
     }
     if (itemOK == 1){
-      let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
-      connection.query(sqlQry, function(error)
+      try{
+        let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
+        connection.query(sqlQry, function(error)
+        {
+          if(error) res.json(error);
+        }).end();
+      } catch{}
+    }
+
+    try{
+      let comando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
+        "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId.toString();
+      connection.query(comando, function(error)
       {
         if(error) res.json(error);
       }).end();
-    }
-
-    let comando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
-      "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId.toString();
-    connection.query(comando, function(error)
-    {
-      if(error) res.json(error);
-    }).end();
+    } catch{}
 });
   
 })
