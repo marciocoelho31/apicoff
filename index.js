@@ -479,6 +479,7 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
   }).end();
 
   //connection.query(comando, function(error, results, fields){}).end();
+  console.log('comando', comando);
   if (comando != '') execSQLQuery(comando, res);
 
 })
