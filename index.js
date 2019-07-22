@@ -426,9 +426,53 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
     posicaoD = 'DISPONÍVEL';
   }
 
-  let comando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
-    "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId;
-  execSQLQuery(comando, res);
+  const connection = mysql.createConnection({
+    host     : process.env.BDHOST,
+    port     : process.env.BDPORT,
+    user     : process.env.BDUSER,
+    password : process.env.BDPWD,
+    database : process.env.BDNAME
+  });
+
+  connection.query("select prior, posicao from pendencias where id=" + atendId, function(error, results, fields){
+      let antPrior = '', antPosicao;
+      for (let i in results) {
+        antPrior = results[i]['prior'];
+        antPosicao = results[i]['posicao'];
+        break;
+      }
+
+      let itemOK = 0;
+      if (antPosicao != 'DISPONÍVEL' && posicaoD == 'DISPONÍVEL') {
+        itemOK = 1;
+      }
+
+      if (prior != '0' && prior != '') {
+        if (posicaoD != 'DISPONÍVEL') {
+          if (prior != antPrior) {
+            if (parseInt(prior) < parseInt(antPrior)) {
+              execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).ToString() + 
+                " AND PRIOR>=" + parseInt(prior).ToString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendid).ToString(), res);
+            }
+            else if (parseInt(prior) > parseInt(antPrior)) {
+              execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
+              " AND PRIOR<=" + parseInt(prior).ToString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).ToString());
+            }
+          }
+        } else {
+          execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1", res);
+        }
+      }
+      if (itemOK == 1){
+        execSQLQuery("UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1", res);
+      }
+
+        let comando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
+          "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId.toString();
+        execSQLQuery(comando, res);
+        connection.end();
+  });
+  
 })
 
 // Proxy request
