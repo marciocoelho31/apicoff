@@ -435,11 +435,13 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
   });
 
   let comando = '';
-  connection.query("select prior, posicao from pendencias where id=" + atendId, function(error, results, fields){
+  connection.query("select PRIOR, POSICAO from pendencias where id=" + atendId, function(error, results, fields){
       let antPrior = '', antPosicao = '';
+      console.log('vai entrar no for let do results');
       for (let i in results) {
-        antPrior = results[i]['prior'];
-        antPosicao = results[i]['posicao'];
+        antPrior = results[i]['PRIOR'];
+        antPosicao = results[i]['POSICAO'];
+        console.log('entrou no for let do results');
         break;
       }
 
@@ -451,6 +453,7 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
       console.log('prior', prior);
       console.log('antPrior', antPrior);
       console.log('posicaoD', posicaoD);
+      console.log('antPosicao', antPosicao);
 
       if (prior != '0' && prior != '') {
         if (posicaoD != 'DISPONÍVEL') {
