@@ -438,6 +438,7 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
   connection.query("select PRIOR, POSICAO from pendencias where id=" + atendId, function(error, results, fields){
       let antPrior = '', antPosicao = '';
       console.log('vai entrar no for let do results');
+      console.log('atendId', atendId);
       for (let i in results) {
         antPrior = results[i]['PRIOR'];
         antPosicao = results[i]['POSICAO'];
