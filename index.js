@@ -441,67 +441,42 @@ app.post('/atendimento/edita', verifyJWT, (req, res, next) => {
         antPosicao = results[i]['posicao'];
         break;
       }
+    }).end();
+    
+  let itemOK = 0;
+  if (antPosicao != 'DISPONÍVEL' && posicaoD == 'DISPONÍVEL') {
+    itemOK = 1;
+  }
 
-      let itemOK = 0;
-      if (antPosicao != 'DISPONÍVEL' && posicaoD == 'DISPONÍVEL') {
-        itemOK = 1;
+  if (prior != '0' && prior != '') {
+    if (posicaoD != 'DISPONÍVEL') {
+      if (prior != antPrior) {
+        if (parseInt(prior) < parseInt(antPrior)) {
+          let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).toString() + 
+            " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
+          connection.query(sqlQry, function(error, results, fields){}).end();
+        }
+        else if (parseInt(prior) > parseInt(antPrior)) {
+          let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
+            " AND PRIOR<=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
+          connection.query(sqlQry, function(error, results, fields){}).end();
+        }
       }
-
-      if (prior != '0' && prior != '') {
-        if (posicaoD != 'DISPONÍVEL') {
-          if (prior != antPrior) {
-            if (parseInt(prior) < parseInt(antPrior)) {
-              try{
-                let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR+1 WHERE PRIOR<" + parseInt(antPrior).toString() + 
-                  " AND PRIOR>=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
-                connection.query(sqlQry, function(error)
-                {
-                  if(error) res.json(error);
-                }).end();
-              } catch{}
-            }
-            else if (parseInt(prior) > parseInt(antPrior)) {
-              try{
-                let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>1 AND PRIOR>" + parseInt(antPrior).toString() + 
-                  " AND PRIOR<=" + parseInt(prior).toString() + " AND POSICAO<>'DISPONÍVEL' AND Id<>" + parseInt(atendId).toString();
-                connection.query(sqlQry, function(error)
-                {
-                  if(error) res.json(error);
-                }).end();
-              } catch{}
-            }
-          }
-        } else {
-          try{
-            let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
-            connection.query(sqlQry, function(error)
-            {
-              if(error) res.json(error);
-            }).end();
-          } catch {}
-      }
+    } else {
+      let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
+      connection.query(sqlQry, function(error, results, fields){}).end();
     }
-    if (itemOK == 1){
-      try{
-        let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
-        connection.query(sqlQry, function(error)
-        {
-          if(error) res.json(error);
-        }).end();
-      } catch{}
-    }
+  }
+  if (itemOK == 1){
+    let sqlQry = "UPDATE pendencias SET PRIOR=PRIOR-1 WHERE PRIOR>" + parseInt(antPrior).toString() + " AND PRIOR > 1";
+    connection.query(sqlQry, function(error, results, fields){}).end();
+  }
 
-    try{
-      let comando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
-        "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId.toString();
-      connection.query(comando, function(error)
-      {
-        if(error) res.json(error);
-      }).end();
-    } catch{}
+  let comando = "update pendencias set cliente='" + cliente + "', prior=" + prior + ", tipo='" + tipoD + "', " + 
+    "descricao='" + descricao + "', posicao='" + posicaoD + "', quemsolic='" + solic + "' where id=" + atendId.toString();
+  connection.query(comando, function(error, results, fields){}).end();
+
 });
-  
-})
 
 // Proxy request
 var server = http.createServer(app);
